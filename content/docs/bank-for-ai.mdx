@@ -1,0 +1,205 @@
+---
+title: The Bank for AI
+description: x402 native settlement, agent economics, the Hanzo + Zoo + AIVM contributions, algorithmic-trading benchmarks, and the five-role substrate (pay, custody, treasury, compliance, audit) that serves the agent economy as a first-class customer category.
+---
+
+# The Bank for AI
+
+The Alliance is not only the bank for human-scale customers. It is **the
+bank for AI**: the substrate that serves agentic AI workloads as a
+first-class customer category, with infrastructure built to the shape of
+AI economics rather than retrofitted from human-scale financial-services
+tooling.
+
+## Why AI is a categorically new customer
+
+Agentic AI changes the shape of every assumption a traditional
+financial-services franchise makes about its customer:
+
+| Dimension | Human-scale customer | Agentic AI customer |
+|---|---|---|
+| **Transaction frequency** | Hundreds per year | Hundreds per minute (2–4 orders of magnitude higher) |
+| **Transaction size** | $10K-class discretionary | Sub-cent micropayments (2–4 orders of magnitude lower) |
+| **Identity model** | Government-ID-anchored KYC | Programmatic cryptographic identity, verifiable credentials |
+| **Risk posture** | Discretionary risk-officer review | Deterministic spend-cap enforcement |
+| **Settlement preference** | T+1 / T+2 acceptable | Deterministic-and-instant required |
+| **Auditability** | Discretionary, after-the-fact | Full-trace-to-operator, private-from-competitors |
+
+No incumbent financial-services franchise serves this customer well. The
+incumbent rails are KYC-anchored, T+1 / T+2 settled, batched, and priced
+for the $10K discretionary-trade shape. **Charging an agent $0.30 for a
+transaction the agent is willing to pay $0.0001 for is not a margin
+opportunity — it is non-existence of the rail.**
+
+The Alliance is the substrate where the AI customer category is served on
+infrastructure built to the agent's shape, not to the human's.
+
+## x402 and the HTTP-native payment rail for AI agents
+
+**x402** is the HTTP-native payment standard (HTTP 402 Payment Required)
+repurposed for the agent economy:
+
+1. A server returns an HTTP 402 response with a payment-required quote
+   in a structured header.
+2. The client (typically an AI agent) signs a payment authorization,
+   attaches it, and retries.
+3. The server validates the payment cryptographically and releases the
+   response.
+
+The result is **per-request micropayments without session-state, without
+prior account-opening, and without an embedded billing relationship**.
+The standard is denominated in stablecoins (USDC, USDT, USDL, and the
+Alliance's own dollar-denominated stablecoin family) and clears on
+EVM-equivalent rails.
+
+The Alliance's substrate is **x402-native**:
+
+- **Sub-second settlement on Quasar finality** means an x402 response
+  clears in human-imperceptible time, suitable for the agent's tight
+  loop.
+- **Fees at the substrate-validator level** are denominated in fractions
+  of a cent per transaction, suitable for the agent-economic
+  10⁻⁴-to-10⁻² dollar-per-call price band.
+- **Encrypted-mempool posture** means agent-to-agent payments do not
+  leak inference content or model-routing decisions to front-running
+  searchers.
+- **Threshold-MPC custody + FHE-confidential primitives** mean an
+  agent's payment stream is auditable to the agent operator without
+  being visible to competitors.
+- **Alliance-member NCPS and SFPB on-ramps** allow conversion between
+  stablecoin payment and fiat at issuer-grade rates, so the agent-
+  economy fiat off-ramp is a single hop, not a multi-day pipeline.
+
+The Alliance is therefore **not only an x402 payment processor; it is
+the native settlement venue for the entire x402 economy**, with the cost
+stack, latency profile, and privacy posture that the agent customer
+requires by construction.
+
+## Hanzo, Zoo, and AIVM contributions
+
+The Alliance's substrate is bound to first-class AI infrastructure
+through three member contributions:
+
+### Hanzo
+
+**Hanzo** carries the Hanzo AI Chain (ACI) family:
+
+- **Hanzo Agent SDK** — agent runtime, multi-agent coordination, tool
+  use, planning, and memory systems
+- **Model Context Protocol (MCP)** — context-windowing, memory
+  management, and cross-model communication
+- **AGI platform** — the long-horizon AGI substrate for general-purpose
+  agentic systems
+- **Defense-grade AI primitives** — the Hanzo defense subtree for
+  national-security agentic workloads
+- **Jin multimodal substrate** — vision-language, audio, and cross-modal
+  understanding for agents that process more than text
+
+### Zoo
+
+**Zoo Labs Foundation** carries the DeAI / DeSci research surface:
+
+- **Decentralized model training** — distributed training across
+  member-contributed GPU pools
+- **Decentralized inference** — distributed inference with cryptographic
+  attestation of model + version + input
+- **Decentralized scientific compute** — DeSci infrastructure for
+  reproducible computational science
+- **ZIP governance** — Zoo Improvement Proposal framework for community-
+  driven evolution of the DeAI substrate
+
+### Lux AIVM (A-Chain)
+
+**Lux** contributes the AIVM (A-Chain) attestation surface. Every
+AI-driven decision on the Alliance substrate is cryptographically attested
+to the model + version + input-state that produced it:
+
+- Matching-engine ML decisions
+- Risk model outputs
+- Portfolio-rebalance recommendations
+- Fraud-detection alerts
+
+The attestation is the **link between the cryptographic substrate and
+the AI-driven operational logic that runs on top of it**.
+
+## Algorithmic trading benchmarks
+
+For **algorithmic trading** specifically, the combination produces a
+substrate that no competing venue can match:
+
+| Capability | Benchmark | Notes |
+|---|---|---|
+| **Order entry round-trip** | ~42 μs | Wire-protocol bus, internal fabric |
+| **Sustained matching throughput** | 1,000,000 orders/sec | Single Go CPU node |
+| **Burst matching throughput** | 20,260,000 tx/sec | 50-connection × 1000-batch wire-protocol |
+| **GPU matching throughput** | 434,000,000 gate ops/sec | GPU/MLX backend, LP-137 GPU crypto stack |
+| **Consensus finality** | &lt;500 ms | Quasar BFT classical path |
+| **Encrypted-mempool order entry** | available | Strategy order flow does not leak to MEV searchers |
+| **FHE-confidential strategy state** | available | Strategy parameters + signals + positions held as FHE ciphertexts on the AIVM substrate |
+| **Co-located validator footprint** | continental-US edge | Latency-arbitrage attempts beyond 500 km physically eliminated |
+| **Fair-by-construction ordering** | Quasar default | Priority-gas-auction surface removed at the substrate layer |
+
+A quantitative strategy's parameters, signals, and current positions can
+be held as FHE ciphertexts on the AIVM substrate; the strategy's
+execution is attested but its internal logic is **not visible to the
+substrate operator or to any third party**.
+
+## AI supercomputing — the coordination layer
+
+For **AI supercomputing** infrastructure — decentralized model training,
+distributed inference, federated learning at production scale — the
+Alliance substrate provides the **economic coordination layer** that the
+compute-substrate (Hanzo Cloud, Zoo training network, member-contributed
+GPU pools) requires:
+
+- **Per-inference micropayment settlement** for model-API invocations
+- **Model-result attestation** binding each output to model + version +
+  input
+- **Dispute resolution** for federated-learning contribution scoring
+- **Privacy-preserving aggregation primitives** that allow customer data
+  to participate in training without leaving the customer's enclave
+
+The substrate is the rails; the compute is the cargo. Members on each
+side connect via the same x402-grade settlement, the same AIVM
+attestation, and the same FHE-grade privacy posture.
+
+## The five-role substrate
+
+Synthesising the AI customer categories, the Alliance plays **five
+distinct roles** in the agent economy, each comparable to a traditional
+bank's role for human-scale customers:
+
+1. **Payment processor** — x402-native settlement venue for agent-to-
+   agent, agent-to-service, and service-to-agent payments, denominated
+   in stablecoins, settling sub-second.
+2. **Custodian** — threshold-MPC custody of the agent's spend-cap
+   balance, with deterministic spend-cap enforcement and issuer-grade
+   attestation to the agent operator.
+3. **Treasury** — on-substrate cross-rail FX, stablecoin conversion, and
+   fiat off-ramp through Alliance-member regulated rails when the
+   agent's operator needs to extract.
+4. **Compliance + identity** — programmatic-identity verification
+   (verifiable credentials anchored on the substrate's identity
+   registry), spend-cap-and-purpose-binding enforcement, sanctions-and-
+   AML overlay at the substrate layer.
+5. **Audit surface** — per-agent-operator full-trace audit with
+   FHE-confidential privacy from competing operators, regulator-grade
+   attestation at the threshold-decrypt boundary.
+
+## The framing
+
+The Alliance is the substrate that **provides the financial-services-
+and-compute backbone for a recursively-expanding agentic economy** —
+agents that spawn sub-agents that hire compute and data and payment
+services, each transaction settling on the substrate, each agent's
+compliance posture inherited from its operator's posture under the
+Alliance's identity stack, each agent's economic state compounding through
+the network's primitives.
+
+The Alliance is therefore not only the bank for the AI customer of today.
+It is the substrate underneath the agent economy that is being
+constructed at AI-development pace, on infrastructure built to the shape
+of the customer rather than retrofitted from human-scale financial-
+services tooling. That is the structural opportunity, and the Alliance's
+positioning across Lux + Zoo + Hanzo + Pars + Osage member coordination is
+what makes it executable.

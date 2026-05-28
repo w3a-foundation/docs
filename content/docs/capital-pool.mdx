@@ -1,0 +1,172 @@
+---
+title: Capital Pool
+description: The three-layer capital architecture — substrate-coordination, member-operating, acquisition-spawn — with documented IRR targets per layer, treasury policy, and cross-layer rules.
+---
+
+# Capital Pool
+
+The Alliance funds itself in **three layers**, each with a distinct source,
+mandate, and time horizon. The layered design protects every individual
+member from being starved during a slow period elsewhere in the network,
+and protects the Alliance's coordination layer from any single member's
+funding cycle.
+
+## Layer 1 — Substrate and coordination capital
+
+| | |
+|---|---|
+| **Source** | Strategic investors with multi-cycle horizons; family offices and sovereign-adjacent capital with discretionary mandates; founders' personal equity re-invested into the Alliance holding rather than monetised at prior exits |
+| **Mandate** | (i) Substrate engineering, (ii) patent estate prosecution + defence, (iii) coordination-layer operating costs (governance, legal, finance, treasury, compliance, secops), (iv) reserve runway against any single member's shortfall |
+| **Time horizon** | Ten-year minimum lockup. Returns distributed through participation in the Alliance's exits rather than current cash distribution |
+| **Custodian** | W3A Foundation parent holding (Delaware) with subsidiary structures by jurisdiction. All Layer-1 capital sits in this vehicle; member-level vehicles draw from it on negotiated terms |
+| **IRR target** | 25–40% gross IRR over the ten-year horizon, weighted heavily by terminal enterprise value |
+
+Layer 1 is **patient capital** in the deepest sense. The investors at this
+layer underwrite the substrate, the IP estate, and the coordination layer
+— not any individual member. Their returns are realised at the
+coordination-layer exit (public listing or vertical-level transaction),
+not at any single member's strategic round.
+
+## Layer 2 — Member operating capital
+
+| | |
+|---|---|
+| **Source** | Member-level rounds underwritten primarily by the Alliance treasury, supplemented by external venture or strategic capital where it adds value (e.g., a strategic enterprise customer who wants equity exposure to a specific member; a sovereign development bank funding a regional expansion) |
+| **Mandate** | Member-level operating costs, marketing, customer acquisition, regional licensing, and product development specific to the member. Each member is responsible for its own P&L; the Alliance does not subsidise underperformance indefinitely |
+| **Time horizon** | Standard venture cycle (5–7 years to liquidity event or sustained profitability), with the optionality of an Alliance-internal recapitalisation rather than a forced external exit when external markets are uncooperative |
+| **IRR target** | 30–60% per individual member round (standard venture math); portfolio expectation of 25% gross IRR |
+
+Layer 2 sits at the **member**, not at the Alliance. Each member's cap
+table is its own. The Alliance treasury participates as a strategic-LP-
+class investor on documented terms; the member retains operational control
+and brand ownership. The Alliance does not consolidate the member's
+financials.
+
+## Layer 3 — Acquisition and spawn capital
+
+| | |
+|---|---|
+| **Source** | Operating cash flow from Phase-Two financial super-app revenue, supplemented by Alliance treasury and by structured-debt facilities collateralised against the Alliance's IP estate and substrate-revenue stream |
+| **Mandate** | Phase-Three transactions: acquisition consideration, spawn-vehicle initial capitalisation, integration cost, and post-close acceleration capital |
+| **Time horizon** | Transaction-specific. Each Phase-Three transaction carries its own thesis with a defined IRR target and a defined exit horizon |
+| **IRR target** | 25–35% per individual transaction; portfolio expectation of 30% gross IRR |
+
+The Alliance treasury manages the Phase-Three portfolio as a single book.
+Each transaction is underwritten on its own thesis (does the target's IP
+slot cleanly into the Alliance substrate? does the target's distribution
+extend the routing layer? does the target's regulatory licensure expand
+the Alliance footprint into a new jurisdiction?). Approved transactions
+enter the portfolio; the treasury then allocates from Layer-3 capital to
+the transaction's consideration + integration + acceleration buckets.
+
+## Cross-layer rules
+
+The cross-layer discipline is what prevents the capital pool from
+degenerating into a single undifferentiated pot:
+
+1. **No round-tripping.** Layer-1 capital does not fund Layer-3
+   acquisitions directly. Layer-1 funds substrate, not member operations.
+   Layer-3 capital is sourced from Layer-2 cash flow or external
+   acquisition facilities, not from substrate reserves.
+2. **No cross-subsidisation by default.** Member A's operating cash flow
+   does not fund member B's losses unless the coordination layer
+   explicitly approves a **member-stabilisation distribution** under
+   documented criteria.
+3. **All capital is patient.** The Alliance does not take capital that
+   demands liquidity inside 24 months. Members who require shorter-cycle
+   capital raise it themselves at the member level, against their own
+   P&L, without committing the Alliance's larger capital pool.
+4. **Layer purity.** A transaction that bridges layers (e.g., a member-
+   stabilisation distribution into a member that is otherwise raising
+   Layer-2 capital) is documented as a cross-layer transaction with
+   board-level visibility, not absorbed into either layer's normal
+   accounting.
+
+## Member-stabilisation distribution criteria
+
+The **member-stabilisation distribution** is the Alliance's mechanism for
+supporting a member through a temporary funding gap. The criteria are
+narrow and documented:
+
+<Steps>
+
+<Step>
+**Operational viability** — the member's product-market fit and
+operational posture are intact; the funding gap is timing, not
+fundamentals.
+</Step>
+
+<Step>
+**Network value** — the member's continued operation has demonstrable
+value to other Alliance members through the routing layer, the
+distribution surface, or jurisdictional coverage.
+</Step>
+
+<Step>
+**Member-level conditions** — the member accepts the coordination-layer
+operational conditions attached to the distribution (typical conditions:
+monthly financial reporting, hiring freeze, capital-spend cap, board
+observer seat).
+</Step>
+
+<Step>
+**Documented exit path** — the member has a documented path back to
+standalone viability (next-round commitment, customer contract pipeline,
+strategic-sale process) within a defined window.
+</Step>
+
+<Step>
+**Board approval** — the coordination layer's board approves the
+distribution amount, the conditions, and the exit-path validation.
+</Step>
+
+</Steps>
+
+If the member cannot meet the criteria, the alternative is **orderly
+wind-down**, not indefinite subsidy. The Alliance's discipline is to
+protect the federation from the long-tail cost of carrying members past
+their viability point.
+
+## Treasury policy
+
+The Alliance treasury is operated under documented policy that
+**prioritises capital preservation over yield optimisation**:
+
+- **Idle cash** is held in money-market instruments, short-duration
+  Treasury bills, and investment-grade corporate paper.
+- **Crypto-asset treasury** is denominated primarily in dollar-pegged
+  stablecoins (USDC, USDT, USDL and the Alliance's own dollar-denominated
+  stablecoin family) held in segregated custody under the W3A MPC + KMS
+  posture.
+- **The treasury does not speculate on the price of the Alliance's own
+  native tokens**; member tokens issued under Phase-Three transactions
+  are vested in the treasury on the same schedule as employee equity.
+- **All treasury custody runs threshold-MPC** (CGGMP21 2-of-3 + Ringtail
+  PQ threshold) across geographically and jurisdictionally diverse pods.
+  No single signer, no single jurisdiction, no single key.
+- **Annual third-party audit** of the treasury under the SOC 2 sub-service
+  organisation framework. Audit reports are made available to members on
+  the standard NDA terms.
+
+## Growth-capital sources at the alliance level
+
+The Alliance carries structured access to significant growth capital at
+the alliance level — **distinct from any individual member's funding
+round**. The capital architecture sources from multiple instruments:
+
+- Strategic investors with multi-cycle horizons
+- Family offices with discretionary mandates suited to the alliance
+  structure
+- Sovereign-adjacent capital from member jurisdictions where the
+  partnership terms permit
+- Committed capital from existing member exits to be reinvested into the
+  acquisition + spawn programme
+- Structured-debt facilities collateralised against the IP estate and
+  substrate-revenue stream
+
+Growth capital is allocated at the coordination layer under documented
+allocation rules that prioritise (i) substrate development, (ii)
+cross-member distribution programmes, (iii) member acquisition + spawn
+activity, and (iv) member runway when single ventures stumble. **No
+single member captures or consumes the alliance capital pool; every
+member benefits from its existence.**

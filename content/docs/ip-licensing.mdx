@@ -1,0 +1,199 @@
+---
+title: IP & Licensing
+description: The three-tier LEL / LRL-PR / SCLA model, the closed luxcpp/ private GPU tier, the bifurcated W3A Foundation + Hanzo, Inc. licensor posture, and member admission as a contracted licensing event.
+---
+
+# IP & Licensing
+
+The Alliance's intellectual-property strategy is the **single most
+load-bearing element of the compounding thesis**. Without enforceable IP,
+the substrate is a commodity and the Alliance is a coordination club
+without a moat. With enforceable IP — properly tiered, properly licensed,
+and properly defended — the substrate becomes a perpetual royalty stream,
+member admission becomes a controlled gate, and every Phase-Three
+acquisition inherits an immediate competitive moat against its category
+incumbents.
+
+## The patent estate
+
+The substrate ships with **87 catalogued patent-bearing inventions** across
+the W3A patent portfolio:
+
+| Bucket | Count |
+|---|---:|
+| Exclusive to W3A Foundation | 47 |
+| Exclusive to Hanzo, Inc. | 32 |
+| Joint W3A Foundation / Hanzo, Inc. | 8 |
+| **Total catalogued inventions** | **87** |
+| Filed today | 11 |
+| Filable (perfectable within standard 12-month window) | 51 |
+| Defensive publications | 21 |
+| Trade-secret records | 7 |
+
+The aggregate combined private-IP and patents estate sits in excess of
+**one billion United States dollars** on a comparable-transaction basis.
+
+## Three-tier licensing
+
+The substrate ships under a deliberate three-tier licensing strategy. The
+canonical reference is `LICENSING-POLICY.md` in the Alliance legal estate.
+
+### Tier 1 — BSD-3-Clause
+
+**Commodity infrastructure free for all commercial use.** Approximately
+25 modules: node, codec, database, p2p, SDK, CLI, API surfaces. This tier
+exists to maximise the substrate's surface area in the developer ecosystem
+— anyone can build on it, including Alliance non-members and competitors.
+
+### Tier 2 — LEL v1.2 (W3A Extended License)
+
+**Source-available, patent-protected.** Approximately 19 modules.
+Commercial rights granted only to **Authorized Networks**: the W3A
+Primary Network, W3A testnets and devnets, and L1/L2/L3 chains
+descending from the W3A Primary Network. The **Descending Chain**
+criterion is the operative gate: an Alliance member chain is automatically
+authorised; a non-member chain is not.
+
+The LEL covers the core proprietary modules: Quasar consensus, FHE
+precompiles, threshold-MPC custody, LX DEX matching, ERC-3643 / T-REX
+contract suite, AIVM A-Chain attestation, post-quantum primitive
+implementations, and the cross-chain MPC + Teleport bridge.
+
+### Tier 3 — LRL-PR v1.0 (W3A Research License with Patent Reservation)
+
+**Research-only license.** Approximately 4 modules — the highest-value
+primitives where the Alliance retains direct gate control over commercial
+use. Commercial use requires a separately-executed **Strategic Commercial
+License Agreement (SCLA)** with W3A Industries Inc.
+
+The LRL-PR tier sits above the LEL because the primitives at this tier are
+either (a) so novel that the Alliance is not prepared to broadly license
+them yet, (b) sufficiently economically significant that commercial use
+should be structured bilaterally, or (c) subject to clean-room
+prosecution that benefits from controlled distribution.
+
+### Tier 4 — closed `luxcpp/` private GPU tree
+
+The fourth layer is **closed-source and trade-secret**. The
+`~/work/luxcpp/` private tree carries:
+
+- The GPU-accelerated DEX matching engine kernels
+- GPU-EVM execution paths
+- GPU-accelerated cryptographic primitives (signing, verification, FHE
+  acceleration)
+- The multi-arch CUDA / Metal / ROCm / oneAPI shim layer
+
+This tier is **not source-available in any form**. It is licensed only to
+the Alliance's top settlement-tier counterparties under bespoke SCLA-class
+agreements, with the trade-secret protocol enforced contractually and
+operationally.
+
+## The bifurcated licensor posture
+
+The patent estate is bifurcated between two licensors:
+
+- **W3A Foundation** licenses the Web3 Alliance branded substrate modules
+  — consensus, post-quantum cryptography, threshold + MPC, FHE, DEX
+  matching, EVM derivatives, VM substrate, cross-chain messaging.
+- **Hanzo, Inc.** licenses the AI / agent runtime / MCP / ACI / defense
+  substrate — the AI side of the platform that the W3A side consumes
+  upstream.
+
+The bifurcation matters for Alliance economics:
+
+- A Phase-Three acquisition that takes W3A-substrate IP needs a W3A
+  Foundation license.
+- A Phase-Three acquisition that takes AI / agent IP needs a Hanzo,
+  Inc. license.
+- A member that takes both needs both.
+
+Two licensors means **two streams of licensing revenue**, **two layers of
+defensive posture**, and **two distinct SCLA forms** — but always
+coordinated under the Alliance coordination layer.
+
+## Member admission as a licensing event
+
+Every Alliance member's admission is structured end-to-end as an
+IP-licensing event:
+
+1. Member executes the **LEL** covering the Tier-2 modules its product uses.
+2. Member executes an **SCLA** covering any Tier-3 LRL-PR modules.
+3. Where the member is taking Hanzo-source modules, member executes the
+   parallel **Hanzo license**.
+4. Member's chain (or its rollup on the W3A L2) is registered as an
+   **Authorized Network** under the LEL Descending Chain criterion.
+5. Member's brand integration is registered in the Alliance brand
+   registry (consistent with the brand-via-env-override discipline).
+6. Member's **compliance and clean-room obligations** are accepted under
+   the relevant policy documents.
+
+Member admission is therefore **not just a commercial choice** — it is a
+contracted, documented IP-licensing event that materially aligns the
+member with the Alliance's compounding economics. The member receives
+licensed substrate access, distribution access, capital access, and a
+coordination-forum seat; the Alliance receives a contracted, enforceable
+licensing relationship that grows the network's IP-revenue base with every
+admission.
+
+## Defensive posture
+
+Where the substrate is used without an executed license, the Alliance
+enforces. The licensing terms are deliberately written to provide a clean
+cause of action for:
+
+- **Trade-secret misappropriation** (the `luxcpp/` tier and the
+  trade-secret records)
+- **Copyright infringement** (the source-available tiers)
+- **Patent infringement** (across the 87-invention estate)
+- **Breach of fiduciary duty** (where applicable)
+- **Unjust enrichment**
+
+Statutory and exemplary damages are pursued where the conduct is willful.
+
+This defensive posture is **not aggressive litigiousness**. The Alliance's
+strong preference is always for **partnership-first resolution under the
+SCLA framework** rather than litigation. But the credibility of the
+defensive posture is what makes the partnership offer compelling: a
+counterparty who knows litigation is an available alternative will accept
+the partnership terms that a counterparty without that knowledge would
+walk away from. **The defensive posture is the BATNA that makes the
+partnership outcome workable.**
+
+## Patent prosecution discipline
+
+The patent estate is actively managed:
+
+- **Eleven (11) inventions are filed today.**
+- **Fifty-one (51) are filable** and should be perfected to non-provisional
+  within the standard 12-month window of any invention in active
+  commercial use.
+- **Twenty-one (21) defensive publications** protect prior art for novel
+  concepts that are not patent-worthy on their own.
+- **Seven (7) trade-secret records** carry the highest-value primitives
+  that are kept out of the patent system entirely.
+
+The discipline is to **file early and prosecute aggressively** in the US
+and key European jurisdictions, with PCT extensions where the commercial
+market warrants. Outside counsel review is annual at minimum; the patent
+docket is treated as a first-class asset on the Alliance balance sheet.
+
+## Companion documents
+
+The detailed legal estate that this page summarises lives in the Alliance
+legal repository:
+
+- `LICENSING-POLICY.md` — canonical licensing policy and the
+  classification of every module to its tier
+- `LEL-v1.2.md` — the W3A Extended License v1.2, the operative Tier-2
+  commercial-use license
+- `LRL-PR-v1.0.md` — the W3A Research License with Patent Reservation,
+  the operative Tier-3 research-only license
+- `SCLA-template-W3A.md` — the bespoke commercial-use template for
+  Tier-3 modules under the W3A Foundation licensor
+- `SCLA-template-Hanzo.md` — the parallel template for Hanzo-sourced
+  modules
+- `CLEAN-ROOM-PROTOCOL.md` — the engineering protocol that members
+  follow when extending substrate modules so that derived IP cleanly
+  belongs to the appropriate licensor
+- `PATENT-DOCKET.md` — the maintained list of filed, filable, defensive-
+  publication, and trade-secret records

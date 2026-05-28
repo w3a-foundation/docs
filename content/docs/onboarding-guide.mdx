@@ -1,0 +1,353 @@
+---
+title: Onboarding Guide
+description: Step-by-step partner-onboarding guide. SPA template, integration brief, IAM tenant provisioning, KMS root-key seal, brand-config bootstrap, CI/CD wiring, soft launch, and GA.
+---
+
+# Onboarding Guide
+
+This guide walks the end-to-end onboarding flow for a new Alliance member,
+from initial diligence through general availability on the cross-member
+routing layer. The flow is uniform across member categories (substrate
+contributors, regulated banks / brokers / TAs, technology partners,
+white-label customers) with category-specific variations called out where
+relevant.
+
+The complete onboarding asset library lives under
+`lux-private/legal/partnerships/template/` (the partnership-template SPA,
+the integration brief, the IAM tenant manifest, the KMS root-key
+ceremony, the brand-config bootstrap, the CI/CD wiring) and
+`lux-private/legal/SOC2/` (the compliance complementary-controls package
+that the member completes at provisioning).
+
+## Phase 0 — Diligence and partnership-template SPA
+
+Before any technical provisioning, the prospective member runs through
+the diligence and partnership-template flow.
+
+<Steps>
+
+<Step>
+**Initial intake at [w3a.foundation/join](https://w3a.foundation/join).**
+The prospective member submits the standard intake form (entity
+identification, primary jurisdiction(s), regulatory standing, cap-table
+summary, technical posture, commercial fit summary).
+</Step>
+
+<Step>
+**Diligence kickoff.** The coordination layer's onboarding team confirms
+receipt within 5 business days and either advances to diligence or returns
+with a structured "not at this time" with feedback. Diligence covers:
+regulatory standing in the primary jurisdiction(s), cap-table cleanliness
+and beneficial-ownership disclosure, existing IP estate and any
+conflicting license obligations, technical posture and clean-room
+readiness, compliance program maturity, commercial fit.
+</Step>
+
+<Step>
+**Standard Strategic Partnership Agreement (SPA) template execution.**
+The template is `lux-private/legal/partnerships/template/SPA.md`. The
+operative commercial terms are the canonical **50/50-above-documented-
+costs** template; bespoke terms (deeper revenue share, capacity
+commitments, custom IP carve-outs) are negotiated on top of the
+boilerplate.
+</Step>
+
+<Step>
+**Mutual NDA execution** (if not already in place) covering the
+diligence + onboarding flow. The standard mutual-NDA is two-year-rolling
+auto-renew with perpetual confidentiality on ceremonial materials.
+</Step>
+
+<Step>
+**License execution** — LEL v1.2 (Tier-2), and SCLA(s) for any Tier-3
+LRL-PR modules the member is taking. If the member is taking Hanzo-source
+modules, parallel Hanzo license execution.
+</Step>
+
+</Steps>
+
+## Phase 1 — Integration brief
+
+With the SPA and licenses in place, the member and the coordination
+layer's integration team produce the **integration brief** — the canonical
+technical scoping document for the member's product surface.
+
+The integration brief covers:
+
+- **Product surface** — what the member is building / running on the
+  Alliance substrate (custody / matching / settlement / RWA tokenization
+  / payment processing / agent-economy services / etc.)
+- **Substrate modules consumed** — the Tier-1/2/3 modules the member's
+  product uses, mapped to the executed license(s)
+- **Tenant model** — how the member's customers are isolated (per-
+  customer tenant, per-org tenant, per-jurisdiction tenant)
+- **Data residency** — where the member's customer data must reside per
+  the jurisdictional compliance overlay
+- **Routing-layer integration** — what cross-member traffic the member
+  receives and emits, with the per-flow SLA expectations
+- **Compliance integration** — the member's SOC 2 sub-service organisation
+  posture, KYC/AML stack, sanctions-screening stack, AML-monitoring stack
+- **Brand integration** — the member's brand assets, the brand-via-env-
+  override config, the brand-registry entry
+- **CI/CD posture** — the member's GitHub org, container registry,
+  release process, environment matrix (dev / staging / prod)
+- **Launch sequence** — the soft-launch and GA milestones, with the
+  metric criteria for each
+
+The integration brief is the operating contract between the member and
+the coordination layer's integration team for the duration of the
+onboarding.
+
+## Phase 2 — IAM tenant provisioning
+
+Hanzo IAM is the authoritative identity layer across the Alliance. The
+member's tenant provisioning runs in a documented sequence:
+
+<Steps>
+
+<Step>
+**Tenant request** — the member submits a tenant request through
+`iam.w3a.foundation` (or via the integration team's manifest in
+`lux-private/legal/partnerships/template/iam-tenant.yaml`).
+</Step>
+
+<Step>
+**Tenant seeded** — the integration team provisions the IAM tenant with
+the standard `<org>-<app>` naming convention (e.g., `acme-exchange`,
+`acme-custody`, `acme-rwa`). Each application is registered separately
+under the tenant.
+</Step>
+
+<Step>
+**Superuser seed** — the member's primary superuser is provisioned with
+`z@<member-domain>` (or the member's preferred identity) and the canonical
+Alliance superuser-password convention. The superuser sets up
+multi-factor at first login.
+</Step>
+
+<Step>
+**OIDC + JWT integration** — the member's product wires up Hanzo IAM as
+the OIDC provider. JWT `owner` claim carries the org identifier that the
+member's data layer uses for tenant scoping.
+</Step>
+
+<Step>
+**Gateway registration** — the member's API surface is registered with
+the Alliance gateway (`api.w3a.foundation`) which injects identity headers
+into the upstream member request.
+</Step>
+
+</Steps>
+
+## Phase 3 — KMS root-key seal
+
+The member's KMS root-key is sealed under the Alliance's KMS root, with
+the per-org KEK envelope established for every encrypted data store the
+member operates.
+
+<Steps>
+
+<Step>
+**KMS tenant provisioned** — the member's KMS tenant is provisioned in
+`kms.w3a.foundation`. The tenant carries its own HSM-bound root and is
+isolated from every other tenant cryptographically.
+</Step>
+
+<Step>
+**Org KEK initialised** — for each org the member onboards, an Org KEK is
+provisioned in the member's KMS tenant. The Org KEK is the wrapping key
+for the per-file / per-row CEKs the member's data layer will use.
+</Step>
+
+<Step>
+**CEK envelope spec** — the member's data layer implements the standard
+envelope: per-file/per-row random AES-256-GCM CEK, encrypted under the
+Org KEK, with `key_version` for rotation and `aead_aad` for binding the
+ciphertext to its row identity. The envelope spec lives in the canonical
+Alliance docs at `kms.w3a.foundation/docs`.
+</Step>
+
+<Step>
+**Audit-log integration** — every CEK unwrap call is logged to the
+member's KMS audit trail, which the SOC 2 sub-service organisation
+assessment audits annually.
+</Step>
+
+<Step>
+**Crypto-shred drill** — the member runs a crypto-shred drill against a
+test org before going live. Revoking the Org KEK renders the test org's
+entire dataset unreadable, proving the disaster-recovery primitive.
+</Step>
+
+</Steps>
+
+## Phase 4 — Brand-config bootstrap
+
+The Alliance enforces **brand-via-env-override discipline**. The member's
+brand identity lives in env-overridable config, not in product code, so
+substrate upgrades flow cleanly across the network.
+
+<Steps>
+
+<Step>
+**Brand config scaffolded** — the member's repo is scaffolded with the
+canonical `brand.ts` (or `brand.json` / `brand.toml`) carrying the
+minimum interface: `name`, `wordmark`, `domain`, `supportEmail`,
+`parentOrg`, plus member-specific extensions.
+</Step>
+
+<Step>
+**Default config = member's brand.** The repo's default config carries
+the member's brand strings. Alternate configs (white-label downstream
+partners, jurisdiction-specific overlays) override via env vars at build
+time.
+</Step>
+
+<Step>
+**No hardcoded brand strings in product code.** The integration team's
+review pass searches the repo for any hard-coded brand string outside
+`brand.ts` and flags them for migration before the soft launch.
+</Step>
+
+<Step>
+**Brand-registry entry** — the member's brand integration is registered
+in the Alliance brand registry. The registry is the canonical reference
+for the cross-routing layer when surfacing member branding to upstream
+customers.
+</Step>
+
+</Steps>
+
+## Phase 5 — CI/CD wiring
+
+The member's CI/CD pipeline integrates with the Alliance build and deploy
+substrate.
+
+<Steps>
+
+<Step>
+**Repo creation** — the member's repo lives under their own GitHub org
+(`github.com/<member>`). The Alliance does not require the repo to live
+under a coordination-layer org.
+</Step>
+
+<Step>
+**Container registry** — the member's container images push to their own
+registry (`ghcr.io/<member>` for GitHub-native members, member-specific
+registries for sovereign deploys). The Alliance does not require a
+shared registry.
+</Step>
+
+<Step>
+**Multi-arch builds** — the member's build pipeline produces `amd64` and
+`arm64` images in parallel using native runners (no QEMU). The
+coordination layer's CI/CD team can provision build runners on the
+Alliance's existing infrastructure on request.
+</Step>
+
+<Step>
+**Deployment manifests** — the member's k8s manifests follow the
+Alliance Kubernetes conventions: `hanzoai/ingress` and `hanzoai/static`
+plugin (no nginx, no caddy), `compose.yml` (not `docker-compose.yml`)
+for local development. The shared kustomize base is published at
+`lux-private/k8s/base/`.
+</Step>
+
+<Step>
+**Environment matrix** — dev / staging / prod environment provisioning,
+with secrets pulled from KMS (never hardcoded). Each environment has its
+own IAM tenant slug, KMS tenant, and brand-config namespace.
+</Step>
+
+</Steps>
+
+## Phase 6 — Soft launch
+
+Soft launch is the first live cross-member-routing-layer integration with
+limited customer-facing exposure.
+
+<Steps>
+
+<Step>
+**Soft-launch readiness review** — the coordination layer's integration
+team and the member's engineering lead jointly review the soft-launch
+checklist: substrate integration green, IAM live, KMS sealed, brand
+registry live, CI/CD pipeline producing builds, SOC 2 complementary
+controls in place, runbook published, on-call rota established.
+</Step>
+
+<Step>
+**Soft-launch traffic** — the coordination layer routes a defined,
+limited slice of cross-member traffic to the member's surface. The slice
+is calibrated to validate the integration without exposing the member to
+operational burst it cannot absorb.
+</Step>
+
+<Step>
+**Metric review at 30 days** — the integration team and the member review
+the soft-launch metrics: latency, error rate, customer-experience
+metrics, compliance-event rate, support-load metrics. The review either
+advances to GA or returns to engineering for remediation.
+</Step>
+
+</Steps>
+
+## Phase 7 — GA
+
+General availability is the full routing-layer integration with the
+member's surface available to every Alliance customer in the member's
+jurisdictional footprint.
+
+<Steps>
+
+<Step>
+**GA announcement** — the coordination layer publishes the GA
+announcement through the Alliance comms surface. Member is now a
+first-class entry in the member registry, the cross-member routing layer,
+and the partner ecosystem.
+</Step>
+
+<Step>
+**Quarterly coordination forum participation** — the member begins
+quarterly forum reporting at the next cycle (financial, operational,
+compliance, roadmap).
+</Step>
+
+<Step>
+**Annual SOC 2 re-attestation** — the member completes the SOC 2
+sub-service organisation re-attestation on the standard annual cadence.
+</Step>
+
+<Step>
+**Continuous coordination** — the member's integration with the substrate
+upgrades automatically as substrate releases ship, subject to the
+member's release cadence and the brand-via-env-override discipline. New
+modules become available under the member's existing LEL / SCLA
+without re-execution.
+</Step>
+
+</Steps>
+
+## Reference assets
+
+| Asset | Location |
+|---|---|
+| Strategic Partnership Agreement template | `lux-private/legal/partnerships/template/SPA.md` |
+| Mutual NDA template | `lux-private/legal/partnerships/template/Mutual-NDA.md` |
+| Integration brief template | `lux-private/legal/partnerships/template/integration-brief.md` |
+| IAM tenant manifest | `lux-private/legal/partnerships/template/iam-tenant.yaml` |
+| KMS root-key ceremony runbook | `lux-private/legal/partnerships/template/kms-ceremony.md` |
+| Brand-config bootstrap | `lux-private/legal/partnerships/template/brand.ts` |
+| CI/CD scaffold | `lux-private/legal/partnerships/template/ci-cd/` |
+| SOC 2 complementary controls package | `lux-private/legal/SOC2/complementary-controls.md` |
+| SOC 2 sub-service organisation responsibility matrix | `lux-private/legal/SOC2/responsibility-matrix.md` |
+| Clean-room engineering protocol | `lux-private/legal/CLEAN-ROOM-PROTOCOL.md` |
+
+## Support
+
+For onboarding-team contact, runbook escalation, and architecture review:
+[onboarding@w3a.foundation](mailto:onboarding@w3a.foundation).
+
+For licensing and SCLA negotiation: [licensing@w3a.foundation](mailto:licensing@w3a.foundation).
+
+For substrate engineering and integration review: [engineering@w3a.foundation](mailto:engineering@w3a.foundation).

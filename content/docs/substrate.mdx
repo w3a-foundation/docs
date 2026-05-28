@@ -1,0 +1,253 @@
+---
+title: Substrate
+description: Quasar consensus, post-quantum primitives, Ringtail R-LWE threshold, the FHE precompile family, threshold-MPC custody, ERC-3643 / T-REX security tokens, the LX DEX matching engine, and the AIVM A-Chain attestation surface.
+---
+
+# Substrate
+
+The Alliance's technical substrate is a **post-quantum-secure
+multi-consensus blockchain platform** with native GPU-accelerated
+execution, an ERC-3643 / T-REX-compliant security-token layer, FHE
+precompile architecture, threshold cryptography, and a cross-chain
+messaging surface. The substrate is patent-protected with 87 catalogued
+inventions across the W3A patent portfolio.
+
+The substrate is contributed and continuously developed by the **Lux
+Network** member (consensus, post-quantum cryptography, threshold + MPC,
+FHE, DEX matching, EVM derivatives, VM substrate, cross-chain messaging)
+and the **Hanzo** member (AI / agent runtime / MCP / ACI / Jin / defense
+substrate). The references throughout this page cite the upstream member
+repositories as authoritative.
+
+## Quasar consensus
+
+Quasar is the substrate's BFT consensus engine. It carries **dual
+finality** in the same block:
+
+- **Classical BLS** for sub-second latency. The classical path produces
+  finality in ~500 ms across a globally-distributed validator set.
+- **Ringtail R-LWE lattice-threshold** for post-quantum finality. The
+  lattice path runs in parallel and provides PQ-grade finality without
+  blocking the classical path.
+
+The result is a finality posture that is **classically fast and
+post-quantum safe at the same time** — a member relying on classical
+finality today inherits the PQ-grade posture without re-instrumentation
+when the migration window arrives.
+
+Quasar's ordering is **fair-by-construction**. Validators do not order
+transactions by gas-price bid; ordering uses commit-reveal-style
+randomness on contested ordering. The categorical priority-gas-auction
+surface that pays Ethereum block-builders billions of dollars per year is
+removed at the substrate layer.
+
+The substrate runs **sub-500 ms finality** with **1,000,000 orders/sec
+sustained** matching throughput on a single Go CPU node and **20,260,000
+tx/sec burst** on a 50-connection × 1000-batch wire-protocol
+configuration. GPU matching reaches **434,000,000 gate operations/sec** on
+the GPU/MLX backend.
+
+Authoritative repository: [github.com/luxfi/node](https://github.com/luxfi/node).
+
+## Post-quantum primitive family
+
+The substrate's PQ posture covers every cryptographic surface — consensus,
+custody, signing, identity, and confidentiality:
+
+| Primitive | Standard | Use |
+|---|---|---|
+| **ML-KEM** | NIST FIPS 203 | Key encapsulation for KMS envelope and wire transport |
+| **ML-DSA** | NIST FIPS 204 | Validator binding (ML-DSA-65 + Groth16 SNARK, LP-020) and identity signatures |
+| **SLH-DSA** | NIST FIPS 205 | Long-duration archival signatures and stateless backup paths |
+| **Falcon** | NIST PQC | Compact-signature path where bandwidth dominates |
+| **Ringtail R-LWE** | RLWE lattice | Post-quantum threshold signing in Quasar dual-finality |
+| **CGGMP21** | Classical ECDSA threshold | Classical threshold custody (2-of-3) |
+| **BFV / CKKS / TFHE** | FHE schemes | Homomorphic computation at the precompile layer |
+
+The **Harvest-Now-Decrypt-Later** threat model — long-duration custody,
+sealed deal documents, vesting schedules — is addressed by construction:
+every cryptographic surface that holds long-lived material carries a
+PQ-secure variant under the same KMS envelope.
+
+## Ringtail and the threshold-PQ posture
+
+Ringtail is the substrate's **post-quantum threshold signature scheme**.
+It runs as a multi-party signing ceremony across `n` parties with a
+`t`-threshold reconstruction; the resulting signature is verifiable under
+the public ring-LWE key. Under the same consensus boundary, the substrate
+operates:
+
+- **CGGMP21 2-of-3 classical ECDSA threshold** for the classical custody
+  path
+- **Ringtail R-LWE PQ threshold** for the post-quantum custody path
+
+The same custody key is both classically and post-quantum safe. A
+single-key subpoena to any one custodian fails by construction — the key
+material is never materialised at any one place; reconstruction requires
+the threshold committee to coordinate.
+
+## FHE precompile family
+
+The substrate ships the **LP-308 family of homomorphic-encryption
+primitives at the EVM substrate layer**. The FHE precompiles enable
+computation on `euint64` ciphertexts under the network's threshold-FHE
+public key, with the only plaintext output being the threshold-decrypted
+result at a scheduled-decrypt moment.
+
+The FHE family unlocks seven categorical primitives unavailable to any
+incumbent stack:
+
+1. **Confidential NAV** — holdings stay as `euint64` ciphertexts; NAV is
+   computed homomorphically; only the per-share NAV is threshold-decrypted.
+   Measured: ~22 s wall-clock and 28M gas for 100 holdings on an
+   8×H100 coprocessor.
+2. **Encrypted dark-pool matching** — orders enter as ciphertexts; the
+   matching predicate runs on the ciphertexts; only the matched-pair
+   emission clears in plaintext. 100-order matching clears in &lt;30 s.
+3. **Sealed-bid AP creation / redemption auctions** — every AP bid arrives
+   as an FHE ciphertext; the matching algorithm runs on the ciphertexts;
+   only the cleared creation / redemption event becomes plaintext.
+4. **Confidential diversification + concentration checks** — SEC Rule
+   35d-1 Names Rule and Subchapter M diversification limits computed
+   against encrypted holdings; only a pass/fail compliance bit is
+   threshold-decrypted per cycle.
+5. **Encrypted shareholder voting** — each beneficial owner casts a
+   threshold-encrypted vote; tabulation is a homomorphic sum; only the
+   final tally is revealed.
+6. **Tax-loss harvesting on encrypted cost basis** — harvest decision
+   runs on encrypted cost-basis ciphertexts; only the harvest-or-not
+   decision and the volume traded becomes plaintext at execution.
+7. **Encrypted institutional-block client-order routing** — institutional
+   block flow runs on encrypted-mempool entry, eliminating the
+   front-running surface that incumbent dark pools (IEX, Liquidnet,
+   BIDS) cannot eliminate cryptographically.
+
+The aggregate FHE value-capture for a manager operating on the substrate
+is **$200M–$600M per year** in eliminated rebalance front-running on a
+$100B quarterly rebalance, plus materially-reduced dark-pool leakage,
+plus pricing-pressure relief on tax-loss-harvesting fee structures, plus
+the categorical regulator-grade compliance attestation without
+information disclosure.
+
+## Threshold-MPC custody
+
+Custody on the Alliance substrate runs as a **threshold-MPC ceremony**
+across `n` pods (typically `n=3`, `t=2`):
+
+- **CGGMP21 2-of-3 ECDSA** for the classical path
+- **Ringtail PQ threshold** for the post-quantum path, in parallel
+- **HSM-backed key shards** at each pod, isolated by jurisdiction and
+  operator
+- **KMS envelope** wrapping the shard material under a network root key
+  whose plaintext never exists outside an HSM boundary
+
+The structural cost is **0.5 bps/yr on AUM** (Kubernetes pod cluster +
+HSM license + 3-pod replication; no physical vaults, no reconciliation
+team, no transfer-agent intermediary on the custody primitive itself).
+The custody cost differential versus BNY / State Street / Citi (2–5 bps/yr)
+is **$2.88B/yr** for a single $11.5T-class manager and **$17.3B/yr**
+across the US ETF + MF market.
+
+The custody mode is **opt-in**. The substrate is non-custodial by
+default — the customer holds the private key via WalletConnect / Hanzo
+Wallet / member-issued self-custody surfaces. The custodial mode is a
+single-click upgrade for customers who prefer the recovery, fraud-
+protection, and regulatory-coverage attributes of a regulated custodian.
+
+## ERC-3643 / T-REX security-token layer
+
+The substrate ships an **ERC-3643 / T-REX-compliant security-token
+contract suite** for regulated digital securities. The suite covers:
+
+- **Cap-table layer** — on-chain register of beneficial owners with
+  programmatic transfer restrictions enforced at the token contract
+- **Identity registry** — verifiable-credential anchored identity that
+  enforces accreditation (Reg D), residency (Reg S), and jurisdictional
+  eligibility at every transfer
+- **Compliance module** — pre-trade gates for accreditation, sanctions,
+  AML, and lock-up enforcement
+- **Transfer-agent interface** — TA-grade events for share issuance,
+  transfer, redemption, and beneficial-owner record-keeping
+- **Recovery primitive** — issuer-controlled key recovery for the lost-
+  or-compromised customer-key case, under documented governance
+
+The contract suite is in production on the Creatrust digital-securities
+platform (CSSF supervision; tokenized commodities, fund-of-funds, fund
+LP interests) and is the canonical security-token primitive across the
+Alliance.
+
+## LX DEX matching engine
+
+The **LX DEX** is the substrate's CLOB matching engine. Architecture:
+
+- **Multi-engine**: a Go CPU node for the canonical reference path; a
+  Rust engine for high-density single-shard throughput; a C++ engine
+  with FIX 4.4 connectivity for institutional flow; a GPU/MLX backend
+  for sustained gate-operation throughput.
+- **Wire protocol**: ZAP binary protocol over the substrate's internal
+  fabric; FIX 4.4 for institutional flow; REST/WebSocket for
+  application-grade integration.
+- **LP-protection mechanisms** (LX-Suite hooks at LP-9010):
+  - Sub-second finality + no priority-gas-auction surface
+  - Encrypted mempool / pre-trade FHE on order entry
+  - Minimum-time-in-position fee hook (canonical 50-block window) that
+    returns zero fee accrual to JIT liquidity capture
+  - Co-located validator footprint with geographic LP fairness inside
+    the 500 km fiber-speed radius
+- **Throughput**: 1M+ orders/sec sustained on a single Go CPU node;
+  20M+ tx/sec burst; 434M gate operations/sec on the GPU/MLX backend.
+
+The structural LP-economic improvement on the substrate versus a
+Uniswap-class mainnet AMM is **2× on volatile pairs and 5–10× on
+long-tail-volatile-pair segments**. LP retention on stablecoin pairs
+approaches 100% (against 80–90% mainnet); major volatile (ETH/USDC) 85–95%
+(against 40–60% mainnet); long-tail volatile 70–90% (against 5–30%
+mainnet).
+
+Authoritative repository: [github.com/luxfi/dex](https://github.com/luxfi/dex).
+
+## AIVM A-Chain attestation surface
+
+The **AIVM (A-Chain)** is the substrate's AI-attestation surface, also
+contributed by Lux. Every AI-driven decision on the Alliance substrate is
+cryptographically attested to the model + version + input-state that
+produced it. The attestation covers:
+
+- **Matching-engine ML decisions** — model-driven order-routing, slippage
+  estimation, smart-order-routing path choices
+- **Risk model outputs** — VaR, ES, scenario stress, margin-engine
+  output, the pre-trade-risk gate decisions
+- **Portfolio-rebalance recommendations** — issuer-side rebalance
+  schedules, AP-creation thresholds, dark-pool routing instructions
+- **Fraud-detection alerts** — AML / sanctions / pattern-detection
+  outputs from the Alliance's risk engines
+
+The attestation is the link between the cryptographic substrate and the
+AI-driven operational logic that runs on top of it. For algorithmic
+trading, an FHE-confidential strategy's parameters and signals can be
+held as ciphertexts on the AIVM substrate; the strategy's execution is
+attested but its internal logic is not visible to the substrate operator
+or any third party.
+
+Authoritative substrate context: the Hanzo member contributes the
+upstream AI infrastructure (Hanzo Cloud, Hanzo Agent SDK, Model Context
+Protocol, Jin multimodal substrate, ACI runtime). The substrate-side
+AIVM is the on-chain attestation surface that binds those AI services to
+cryptographic identity and verifiable execution.
+
+## Repository map
+
+| Component | Member | Repository |
+|---|---|---|
+| Blockchain Node | Lux | [github.com/luxfi/node](https://github.com/luxfi/node) |
+| LX DEX | Lux | [github.com/luxfi/dex](https://github.com/luxfi/dex) |
+| Genesis | Lux | [github.com/luxfi/genesis](https://github.com/luxfi/genesis) |
+| Trading SDK | Lux | [github.com/luxfi/sdk](https://github.com/luxfi/sdk) |
+| Wallet | Lux | [github.com/luxfi/wallet](https://github.com/luxfi/wallet) |
+| Smart Contracts | Lux | [github.com/luxfi/contracts](https://github.com/luxfi/contracts) |
+| Bridge | Lux | [github.com/luxfi/bridge](https://github.com/luxfi/bridge) |
+| KMS | Lux | [github.com/luxfi/kms](https://github.com/luxfi/kms) |
+| Agent SDK | Hanzo | [github.com/hanzoai/agent](https://github.com/hanzoai/agent) |
+| MCP | Hanzo | [github.com/hanzoai/mcp](https://github.com/hanzoai/mcp) |
+| Cloud / PaaS | Hanzo | [github.com/hanzoai/platform](https://github.com/hanzoai/platform) |
+| DeAI / DeSci | Zoo | [github.com/zooai](https://github.com/zooai) |

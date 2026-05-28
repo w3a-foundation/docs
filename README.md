@@ -67,6 +67,22 @@ Production deploys to `docs.w3a.foundation` through the Hanzo PaaS
 (`platform.hanzo.ai`). The hostname is fronted by `hanzoai/ingress` with
 the `hanzoai/static` plugin; no nginx, no caddy.
 
+A Cloudflare Pages mirror is also wired in
+`.github/workflows/deploy.yml` (project `w3a-docs`). The workflow runs
+`pnpm build` then `npx @cloudflare/next-on-pages@1` to convert the
+Next.js standalone build into the canonical Pages bundle at
+`.vercel/output/static`, then deploys that directory.
+
+### Required CI secrets
+
+```sh
+gh secret set CLOUDFLARE_API_TOKEN  --repo w3a-foundation/docs --body '<token>'
+gh secret set CLOUDFLARE_ACCOUNT_ID --repo w3a-foundation/docs --body '<account-id>'
+```
+
+The token must have `Pages:Edit` permission for the `w3a-docs`
+project.
+
 ## Repository layout
 
 ```
